@@ -11,45 +11,47 @@ EMAIL=""
 SUSER=""
 SPASSWORD=""
 
-core {
-  # Update the system to latest patch revision
-  apt update && apt upgrade -y
-  apt install net-tools fail2ban
+# Update the system to latest patch revision
+apt update && apt upgrade -y && apt install -y net-tools fail2ban
   
-  # Add the maintenance user
-  adduser $SUSER --gecos "$SUSER,home,127.0.0.1,127.0.0.1" --disabled-password
-  echo "$SUSER:$SPASSWORD" | sudo chpasswd
-  usermod -a -G admin redqueen
-  usermod -a -G sudo redqueen
+# Add the maintenance user
+adduser $SUSER --gecos "$SUSER,home,127.0.0.1,127.0.0.1" --disabled-password
+echo "$SUSER:$SPASSWORD" | sudo chpasswd
+usermod -a -G admin redqueen
+usermod -a -G sudo redqueen
   
-  # Add the boss
-  adduser $USER --gecos "$USER,home,127.0.0.1,127.0.0.1" --disabled-password
-  echo "$USER:$PASSWORD" | sudo chpasswd
-  usermod -a -G admin peter
-  usermod -a -G sudo peter
+# Add your user
+adduser $USER --gecos "$USER,home,127.0.0.1,127.0.0.1" --disabled-password
+echo "$USER:$PASSWORD" | sudo chpasswd
+usermod -a -G admin peter
+usermod -a -G sudo peter
   
-  # Add in the monitoring
-  echo "#!/bin/bash" > /etc/cron.daily/monitoring
-  echo "/usr/sbin/monitor 2>&1 | tee /tmp/$HOSTNAME.txt | mail -s \"Monitoring script for: $HOSTNAME\" $EMAIL" >> /etc/cron.daily/monitoring
-  chmod +x /etc/cron.daily/monitoring
-  cp conf/monitor /usr/sbin/monitor
-  chmod +x /usr/sbin/monitor
+# Add in the monitoring
+echo "#!/bin/bash" > /etc/cron.daily/monitoring
+echo "/usr/sbin/monitor 2>&1 | tee /tmp/$HOSTNAME.txt | mail -s \"Monitoring script for: $HOSTNAME\" $EMAIL" >> /etc/cron.daily/monitoring
+chmod +x /etc/cron.daily/monitoring
+cp conf/monitor /usr/sbin/monitor
+chmod +x /usr/sbin/monitor
   
-  # Effectively remove the root user from circulation
-  cp conf/chgrt /etc/cron.daily
-  chmod +x /etc/cron.daily/chgrt
+# Effectively remove the root user from circulation
+cp conf/chgrt /etc/cron.daily
+chmod +x /etc/cron.daily/chgrt
   
-  # Enable network level firewall
-  cp conf/ufw /etc/default/ufw
-  ufw default deny incoming
-  ufw default allow outgoing
-  ufw allow ssh
-  ufw enable
+# Enable network level firewall
+cp conf/ufw /etc/default/ufw
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow ssh
+ufw enable
   
-  # Hardened SSH service
-  cp conf/sshd_config /etc/ssh/sshd_config
-  service ssh restart
-}
+# Hardened SSH service
+cp conf/sshd_config /etc/ssh/sshd_config
+service ssh restart
+
+# Install postfix mail server to send emails
+apt install postfix
+cp conf/main.cf /etc/postfix/main.cf
+service postfix restart
 
 web {
   # Core apache2 install
@@ -82,14 +84,7 @@ web {
   service apache2 restart
 }
 
-postfix {
-  # Core postfix mail server
-  apt install postfix
-  cp conf/main.cf /etc/postfix/main.cf
-  cp conf/sasl_passwd /etc/postfix/sasl_passwd
-  postmap hash:/etc/postfix/sasl_passwd
-  service postfix restart
-}
+
 
 database {
   # Hardened MySQL Database

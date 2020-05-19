@@ -1,0 +1,4 @@
+#!/bin/bash
+
+PASS=`openssl rand -base64 32`
+echo "root:$PASS"|chpasswd

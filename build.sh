@@ -53,6 +53,10 @@ apt install postfix
 cp conf/main.cf /etc/postfix/main.cf
 service postfix restart
 
+## Add ClamAV
+apt install -y clamav clamav-daemon clamav-freshclam
+
+
 # Install apache2 webserver
 apt install -y apache2 libapache2-mod-security2 libapache2-mod-evasive 
 apt install -y mcrypt php php-mysql php-mbstring php-curl php-gd php-tokenizer php-json php-xml php-zip php-imagick php-fpdf php-tcpdf

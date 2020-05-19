@@ -87,7 +87,17 @@ service apache2 restart
 apt install mysql-server
 mysql_secure_installation
 
-# Now finish up
+# Now we have Ubuntu 20.04 LTS with Apache, PHP and MYSQL. The web service is locked to Cloudflare only
+# so you can use cloudflare your primary WAF and tune mod_security for fine grain protection. 
+# Next we look at proactive protection.
+
 apt install -y net-tools fail2ban rkhunter
+
+# Lets blackhole all the portscans etc
+apt install psad
+sed -i "s/root@localhost/$EMAIL/g" /etc/psad/psad.conf
+sed -i "s/_CHANGE_ME_/$HOSTNAME/g" /etc/psad/psad.conf
+service psad restart
+
 
 	

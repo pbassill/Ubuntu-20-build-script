@@ -62,7 +62,7 @@ cp conf/apache2.conf /etc/apache2
 cp conf/modsecurity.conf /etc/modsecurity/modsecurity.conf 
 mv /usr/share/modsecurity-crs /usr/share/modsecurity-crs.bk
 git clone https://github.com/SpiderLabs/owasp-modsecurity-crs.git /usr/share/modsecurity-crs
-cp conf/crs-setup.conf.example /usr/share/modsecurity-crs/crs-setup.conf
+cp conf/crs-setup.conf /usr/share/modsecurity-crs/crs-setup.conf
 
 ## Enable DDoS Protection in Apache2
 mkdir /var/log/mod_evasive 

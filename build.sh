@@ -12,7 +12,7 @@ SUSER=""
 SPASSWORD=""
 
 # Update the system to latest patch revision
-apt update && apt upgrade -y && apt install -y net-tools fail2ban
+apt update && apt upgrade -y
   
 # Add the maintenance user
 adduser $SUSER --gecos "$SUSER,home,127.0.0.1,127.0.0.1" --disabled-password
@@ -86,5 +86,8 @@ service apache2 restart
 # Hardened MySQL Database
 apt install mysql-server
 mysql_secure_installation
+
+# Now finish up
+apt install -y net-tools fail2ban rkhunter
 
 	

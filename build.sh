@@ -53,43 +53,38 @@ apt install postfix
 cp conf/main.cf /etc/postfix/main.cf
 service postfix restart
 
-web {
-  # Core apache2 install
-  apt install -y apache2 libapache2-mod-security2 libapache2-mod-evasive mcrypt php php-mysql php-mbstring php-curl php-gd php-tokenizer php-json php-xml php-zip php-imagick php-fpdf php-tcpdf wkhtmltopdf php-fpm php-apcu composer
-  cp conf/apache2.conf /etc/apache2
-  a2enmod ssl
-  a2enmod headers
-  a2enmod rewrite
+# Install apache2 webserver
+apt install -y apache2 libapache2-mod-security2 libapache2-mod-evasive 
+apt install -y mcrypt php php-mysql php-mbstring php-curl php-gd php-tokenizer php-json php-xml php-zip php-imagick php-fpdf php-tcpdf wkhtmltopdf
+cp conf/apache2.conf /etc/apache2
 
-  ## Enable WAF in Apache2 using mod_security
-  cp conf/modsecurity.conf /etc/modsecurity/modsecurity.conf 
-  mv /usr/share/modsecurity-crs /usr/share/modsecurity-crs.bk
-  git clone https://github.com/SpiderLabs/owasp-modsecurity-crs.git /usr/share/modsecurity-crs
-  cp conf/crs-setup.conf.example /usr/share/modsecurity-crs/crs-setup.conf
+## Enable WAF in Apache2 using mod_security
+cp conf/modsecurity.conf /etc/modsecurity/modsecurity.conf 
+mv /usr/share/modsecurity-crs /usr/share/modsecurity-crs.bk
+git clone https://github.com/SpiderLabs/owasp-modsecurity-crs.git /usr/share/modsecurity-crs
+cp conf/crs-setup.conf.example /usr/share/modsecurity-crs/crs-setup.conf
 
-  ## Enable DDoS Protection in Apache2
-  mkdir /var/log/mod_evasive 
-  chown -R www-data:www-data /var/log/mod_evasive
-  cp conf/security.conf /etc/apache2/conf-available/security.conf
-  cp conf/evasive.conf /etc/apache2/conf-available/evasive.conf
+## Enable DDoS Protection in Apache2
+mkdir /var/log/mod_evasive 
+chown -R www-data:www-data /var/log/mod_evasive
+cp conf/security.conf /etc/apache2/conf-available/security.conf
+cp conf/evasive.conf /etc/apache2/conf-available/evasive.conf
 
-  ## Enable source IP logging
-  cp conf/remoteip.conf /etc/apache2/conf-available/remoteip.conf
-  a2enmod remoteip
-  
-  ## Only permit HTTPS from CloudFlare at a network level
-  cp conf/cloudflare /etc/cron.daily
-  chmod +x /etc/cron.daily/cloudflare  
+## Enable source IP logging
+cp conf/remoteip.conf /etc/apache2/conf-available/remoteip.conf
 
-  service apache2 restart
-}
+## Only permit HTTPS from CloudFlare at a network level
+cp conf/cloudflare /etc/cron.daily
+chmod +x /etc/cron.daily/cloudflare  
 
+a2enmod ssl
+a2enmod headers
+a2enmod rewrite
+a2enmod remoteip
+service apache2 restart
 
-
-database {
-  # Hardened MySQL Database
-  apt install mysql-server
-  mysql_secure_installation
-}
+# Hardened MySQL Database
+apt install mysql-server
+mysql_secure_installation
 
 	

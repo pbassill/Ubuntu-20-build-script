@@ -55,7 +55,7 @@ service postfix restart
 
 # Install apache2 webserver
 apt install -y apache2 libapache2-mod-security2 libapache2-mod-evasive 
-apt install -y mcrypt php php-mysql php-mbstring php-curl php-gd php-tokenizer php-json php-xml php-zip php-imagick php-fpdf php-tcpdf wkhtmltopdf
+apt install -y mcrypt php php-mysql php-mbstring php-curl php-gd php-tokenizer php-json php-xml php-zip php-imagick php-fpdf php-tcpdf
 cp conf/apache2.conf /etc/apache2
 
 ## Enable WAF in Apache2 using mod_security

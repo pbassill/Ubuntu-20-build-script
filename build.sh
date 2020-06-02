@@ -11,20 +11,26 @@ EMAIL=""
 SUSER=""
 SPASSWORD=""
 
+# System Details
+SYSNAME=""
+
 # Update the system to latest patch revision
 apt update && apt upgrade -y
   
 # Add the maintenance user
 adduser $SUSER --gecos "$SUSER,home,127.0.0.1,127.0.0.1" --disabled-password
 echo "$SUSER:$SPASSWORD" | sudo chpasswd
-usermod -a -G admin redqueen
-usermod -a -G sudo redqueen
+usermod -a -G admin $SUSER
+usermod -a -G sudo $SUSER
   
 # Add your user
 adduser $USER --gecos "$USER,home,127.0.0.1,127.0.0.1" --disabled-password
 echo "$USER:$PASSWORD" | sudo chpasswd
-usermod -a -G admin peter
-usermod -a -G sudo peter
+usermod -a -G admin $USER
+usermod -a -G sudo $USER
+
+# Fuck up the root account
+
   
 # Add in the monitoring
 echo "#!/bin/bash" > /etc/cron.daily/monitoring
